@@ -37,7 +37,7 @@ class Game:
 
                 background.handle_user_events(event, pos)
 
-            if background.game_over():
+            if background.get_game_over():
                 run = False
                 self.state = "win"
 

@@ -1,3 +1,4 @@
+import sys
 import pygame
 from gui_parts.utility_methods import Utility
 
@@ -13,6 +14,7 @@ class Tower:
         self.price = 500
         self.placed = False
         self.radius = radius
+        self.attack_count = 0
 
     def draw(self, surface, pos):
         if self.is_over(pos):
@@ -26,6 +28,13 @@ class Tower:
             surface.blit(self.tower_img, self.rect)
 
     def update(self):
+        """
+        Updates the enemy every frame
+        :return: None
+        """
+        self.attack_count += 1
+        if self.attack_count > sys.maxsize:
+            self.attack_count = 0
         pass
 
     def set_placed(self):
@@ -35,4 +44,6 @@ class Tower:
         return self.rect.collidepoint(pos)
 
     def attack(self, enemies):
-        pass
+        for enemy in enemies:
+            if Utility.pyth_dis(enemy.rect.centerx, enemy.rect.centery, self.rect.centerx, self.rect.centery) < self.radius:
+                pass
