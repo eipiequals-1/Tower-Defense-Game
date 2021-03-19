@@ -1,16 +1,19 @@
 import math
 import random
+
 import pygame
-from gui_parts.menu import Menu
-from gui_parts.utility_methods import Utility
-from gui_parts.text import Text
-from towers.bomber import Bomber
-from towers.archer import Archer
-from towers.coiner import Coiner
+
 from enemies.crow import Crow
+from enemies.gnu import Gnu
 from enemies.mage import Mage
 from enemies.wizard import Wizard
-from enemies.gnu import Gnu
+from gui_parts.menu import Menu
+from gui_parts.text import Text
+from gui_parts.utility_methods import Utility
+from towers.archer import Archer
+from towers.bomber import Bomber
+from towers.coiner import Coiner
+
 
 class Background:
     COSTS = {"bomber": 500, "archer": 250, "coiner": 200}
@@ -38,6 +41,8 @@ class Background:
         self.menu = Menu(screen_w, screen_h, self.COSTS["bomber"], self.COSTS["archer"], self.COSTS["coiner"])
         self.create_text()
 
+        self.coin_img = Utility.get_img("assets/coin.png", 45, 45)
+
         self.towers = []
         self.enemies = []
         self.current_tower = None
@@ -58,11 +63,16 @@ class Background:
             tower.draw(surface, pos)
         self.menu.draw(surface, pos)
 
+        surface.blit(self.coin_img, (self.money_text.x - 10 - self.coin_img.get_width(), self.menu.rect.centery - self.coin_img.get_height() // 2))
+
         self.wave_num_text.set_text("WAVE# " + str(self.current_wave))
         self.wave_num_text.draw(surface)
 
         self.killed_text.set_text("SLAUGHTERED: " + str(self.killed))
         self.killed_text.draw_right(surface, 10, self.screen_w)
+
+        self.money_text.set_text(str(self.money))
+        self.money_text.draw_right(surface, 10, self.menu.rect.right)
 
     def update(self):
         self.update_waves()
@@ -111,13 +121,15 @@ class Background:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.current_tower is None:
 
-                if self.menu.bomb_tower.is_over(pos) and self.money >= self.COSTS["bomber"]:
+                if self.menu.bomber_tower.is_over(pos) and self.money >= self.COSTS["bomber"]:
                     self.create_new_tower(pos, "bomber", self.COSTS["bomber"])
                     self.money -= self.COSTS["bomber"]
+
                 elif self.menu.archer_tower.is_over(pos) and self.money >= self.COSTS["archer"]:
                     self.create_new_tower(pos, "archer", self.COSTS["archer"])
                     self.money -= self.COSTS["archer"]
-                elif self.menu.coin_tower.is_over(pos) and self.money >= self.COSTS["coiner"]:
+
+                elif self.menu.coiner_tower.is_over(pos) and self.money >= self.COSTS["coiner"]:
                     self.create_new_tower(pos, "coiner", self.COSTS["coiner"])
                     self.money -= self.COSTS["coiner"]
             else:
@@ -126,6 +138,7 @@ class Background:
     def create_text(self):
         self.wave_num_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
         self.killed_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
+        self.money_text = Text("uroob", 28, "", (0, 0, 0), 0, self.menu.rect.height // 3)
 
     def get_game_over(self):
         """

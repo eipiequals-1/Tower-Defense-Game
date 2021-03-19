@@ -1,6 +1,8 @@
 import pygame
-from gui_parts.utility_methods import Utility
+
 from gui_parts.text import Text
+from gui_parts.utility_methods import Utility
+
 
 class Button:
     """

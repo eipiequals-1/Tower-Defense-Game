@@ -1,5 +1,6 @@
 import pygame
 
+
 class Text:
     def __init__(self, font_name="uroob", size=25, text="", color=(255, 255, 255), x=0, y=0):
         self.font = pygame.font.SysFont(font_name, size)
@@ -30,7 +31,8 @@ class Text:
         self.text = self.font.render(text, 1, self.color)
 
     def draw_right(self, surface, x_margin, right):
-        surface.blit(self.text, (right - x_margin - self.get_width(), self.y))
+        self.x = right - x_margin - self.get_width()
+        surface.blit(self.text, (self.x, self.y))
 
     def get_text(self):
         return self.text

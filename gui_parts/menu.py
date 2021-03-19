@@ -1,7 +1,9 @@
 import pygame
+
 from .button import Button
-from .utility_methods import Utility
 from .text import Text
+from .utility_methods import Utility
+
 
 class Menu:
     def __init__(self, s_width, s_height, bomber_cost, archer_cost, coiner_cost):
@@ -61,5 +63,3 @@ class Menu:
         self.bomber_cost_text = Text("uroob", 20, str(bomber_cost), (0, 0, 0), 0, self.bomber_tower.rect.centery)
         self.archer_cost_text = Text("uroob", 20, str(archer_cost), (0, 0, 0), 0, self.archer_tower.rect.centery)
         self.coiner_cost_text = Text("uroob", 20, str(coiner_cost), (0, 0, 0), 0, self.coiner_tower.rect.centery)
-        
-    

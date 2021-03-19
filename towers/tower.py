@@ -1,7 +1,9 @@
 import random
 import sys
+
 import pygame
 from gui_parts.utility_methods import Utility
+
 
 class Tower:
     """

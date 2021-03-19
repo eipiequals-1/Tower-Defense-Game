@@ -1,6 +1,8 @@
 import pygame
-from .tower import Tower
 from gui_parts.utility_methods import Utility
+
+from .tower import Tower
+
 
 class Bomber(Tower):
     def __init__(self, pos, cost):
