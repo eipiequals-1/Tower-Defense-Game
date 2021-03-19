@@ -1,3 +1,4 @@
+import random
 import sys
 import pygame
 from gui_parts.utility_methods import Utility
@@ -7,7 +8,7 @@ class Tower:
     An abstract class that takes care of drawing, moving, collisions, and updating
     It is a superclass of bomber, archer
     """
-    def __init__(self, pos, radius):
+    def __init__(self, pos, radius, cost):
         self.tower_img = Utility.get_img("assets/towers/tower.png", 40, 110)
         self.man_img = Utility.get_img("assets/towers/man.png", 15, 35)
         self.rect = self.tower_img.get_rect(center=pos)
@@ -15,6 +16,8 @@ class Tower:
         self.placed = False
         self.radius = radius
         self.attack_count = 0
+
+        self.cost = cost
 
     def draw(self, surface, pos):
         if self.is_over(pos):
@@ -26,16 +29,18 @@ class Tower:
             self.rect.centery = pos[1]
         else:
             surface.blit(self.tower_img, self.rect)
+        surface.blit(self.man_img, (self.rect.centerx - self.man_img.get_width() // 2, self.rect.y - 15))
 
-    def update(self):
+    def update(self, enemies):
         """
         Updates the enemy every frame
         :return: None
         """
-        self.attack_count += 1
-        if self.attack_count > sys.maxsize:
-            self.attack_count = 0
-        pass
+        if self.placed:
+            self.attack_count += 1
+            if self.attack_count > sys.maxsize:
+                self.attack_count = 0
+            self.attack(enemies)
 
     def set_placed(self):
         self.placed = True
@@ -45,5 +50,5 @@ class Tower:
 
     def attack(self, enemies):
         for enemy in enemies:
-            if Utility.pyth_dis(enemy.rect.centerx, enemy.rect.centery, self.rect.centerx, self.rect.centery) < self.radius:
-                pass
+            if Utility.pyth_dis(self.rect.centerx, self.rect.centery, enemy.rect.centerx, enemy.rect.centery) < self.radius:
+                enemy.handle_attacked(random.choice([20, 30, 40]))

@@ -14,6 +14,8 @@ class Game:
         self.running = True
 
     def run(self):
+        #music = pygame.mixer.music.load("assets/music.mp3")
+        #pygame.mixer.music.play(-1)
         while self.running:
             if self.state == "playing":
                 self.playing(self.screen)
@@ -26,6 +28,11 @@ class Game:
         quit()
 
     def playing(self, surface):
+        """
+        The game loop that controls events, drawing, and updating the game
+        :param surface: surface to draw on
+        :return: None
+        """
         run = True
         background = Background(self.width, self.height)
         while run:

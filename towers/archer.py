@@ -3,8 +3,8 @@ from .tower import Tower
 from gui_parts.utility_methods import Utility
 
 class Archer(Tower):
-    def __init__(self, pos):
-        super().__init__(pos, 65)
+    def __init__(self, pos, cost):
+        super().__init__(pos, 90, cost)
         self.bow_img = Utility.get_img("assets/towers/bow.png", self.rect.w - 10, self.rect.w - 5)
 
     def draw(self, surface, pos):

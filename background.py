@@ -3,20 +3,23 @@ import random
 import pygame
 from gui_parts.menu import Menu
 from gui_parts.utility_methods import Utility
+from gui_parts.text import Text
 from towers.bomber import Bomber
 from towers.archer import Archer
+from towers.coiner import Coiner
 from enemies.crow import Crow
 from enemies.mage import Mage
 from enemies.wizard import Wizard
 from enemies.gnu import Gnu
 
 class Background:
+    COSTS = {"bomber": 500, "archer": 250, "coiner": 200}
     def __init__(self, screen_w, screen_h):
         self.waves = [
             # crow, mage, wizard, gnu
             # corresponds to the frequency
             # of each enemy per wave
-            [          ],
+            [],
             [9, 7, 3, 1],  # 1
             [15, 0, 10, 24],  # 2
             [0, 0, 15, 0],  # 3
@@ -28,56 +31,76 @@ class Background:
             [2, 41, 0, 0],  # 9
             [0, 0, 50, 100],  # 10
         ]
+        self.current_wave = 1
         self.imgs = [Utility.get_img("assets/background.jpg", screen_w, screen_h)]
         self.screen_w = screen_w
         self.screen_h = screen_h
-        self.menu = Menu(screen_w, screen_h)
+        self.menu = Menu(screen_w, screen_h, self.COSTS["bomber"], self.COSTS["archer"], self.COSTS["coiner"])
+        self.create_text()
+
         self.towers = []
         self.enemies = []
         self.current_tower = None
-        self.current_wave = 1
         self.create_enemies()
+
+        self.killed = 0
+
         self.game_over = False
+
+        self.money = 5000
 
     def draw(self, surface, pos):
         surface.blit(self.imgs[0], (0, 0))
         for enemy in self.enemies:
             enemy.draw(surface)
 
-        self.menu.draw(surface, pos)
         for tower in self.towers:
             tower.draw(surface, pos)
+        self.menu.draw(surface, pos)
+
+        self.wave_num_text.set_text("WAVE# " + str(self.current_wave))
+        self.wave_num_text.draw(surface)
+
+        self.killed_text.set_text("SLAUGHTERED: " + str(self.killed))
+        self.killed_text.draw_right(surface, 10, self.screen_w)
 
     def update(self):
+        self.update_waves()
+
+        self.menu.update()
+        for tower in self.towers:
+            tower.update(self.enemies)
+
+    def update_waves(self):
         for enemy in self.enemies:
             enemy.update()
-            if enemy.passed_map():
+            if enemy.passed_map(self.screen_w) or enemy.is_dead():
+                if enemy.is_dead():
+                    self.killed += 1
                 self.enemies.remove(enemy)
                 # print("popped the enemy")
 
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
                 self.current_wave += 1
-                print(self.current_wave)
+                # print(self.current_wave)
                 self.create_enemies()
 
             else:
                 self.game_over = True
 
-        self.menu.update()
-        for tower in self.towers:
-            tower.update()
-
-    def create_new_tower(self, pos, mode):
+    def create_new_tower(self, pos, mode, cost):
         """
         Creates a new tower depending on type
         :param pos: mouse position relative to (0, 0)
         :param mode: type of tower (bomb, archer)
         """
-        if mode == "bomb":
-            self.towers.append(Bomber(pos))
+        if mode == "bomber":
+            self.towers.append(Bomber(pos, cost))
         elif mode == "archer":
-            self.towers.append(Archer(pos))
+            self.towers.append(Archer(pos, cost))
+        elif mode == "coiner":
+            self.towers.append(Coiner(pos, cost))
         self.current_tower = self.towers[-1]
 
     def set_current_tower_placed(self):
@@ -86,18 +109,28 @@ class Background:
 
     def handle_user_events(self, event, pos):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.current_tower == None:
-                if self.menu.bomb_tower.is_over(pos):
-                    self.create_new_tower(pos, "bomb")
-                elif self.menu.archer_tower.is_over(pos):
-                    self.create_new_tower(pos, "archer")
+            if self.current_tower is None:
+
+                if self.menu.bomb_tower.is_over(pos) and self.money >= self.COSTS["bomber"]:
+                    self.create_new_tower(pos, "bomber", self.COSTS["bomber"])
+                    self.money -= self.COSTS["bomber"]
+                elif self.menu.archer_tower.is_over(pos) and self.money >= self.COSTS["archer"]:
+                    self.create_new_tower(pos, "archer", self.COSTS["archer"])
+                    self.money -= self.COSTS["archer"]
+                elif self.menu.coin_tower.is_over(pos) and self.money >= self.COSTS["coiner"]:
+                    self.create_new_tower(pos, "coiner", self.COSTS["coiner"])
+                    self.money -= self.COSTS["coiner"]
             else:
                 self.set_current_tower_placed()
+
+    def create_text(self):
+        self.wave_num_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
+        self.killed_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
 
     def get_game_over(self):
         """
         Simple getter method
-        :return: boolean
+        :return: bool
         """
         return self.game_over
 

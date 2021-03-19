@@ -4,7 +4,7 @@ from .enemy import Enemy
 
 class Wizard(Enemy):
     def __init__(self, x):
-        super().__init__(x, 33, 39, len(os.listdir("assets/wizard")), "wizard/")
+        super().__init__(x, 33, 39, len(os.listdir("assets/wizard")), "wizard/", 3600)
         # 0: right, 1: down, 2: left, 3: up
 
     def draw(self, surface):
