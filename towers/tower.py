@@ -36,6 +36,7 @@ class Tower:
     def update(self, enemies):
         """
         Updates the enemy every frame
+        :param enemies: list of enemies
         :return: None
         """
         if self.placed:
@@ -53,4 +54,4 @@ class Tower:
     def attack(self, enemies):
         for enemy in enemies:
             if Utility.pyth_dis(self.rect.centerx, self.rect.centery, enemy.rect.centerx, enemy.rect.centery) < self.radius:
-                enemy.handle_attacked(random.choice([20, 30, 40]))
+                enemy.handle_attacked(random.randint(20, 50))

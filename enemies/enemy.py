@@ -12,6 +12,7 @@ class Enemy:
     An abstract class that takes care of drawing, moving, collisions, and updating.
     Is a superclass of wizard, mage, ogre, crow and scorpion
     """
+    vel = 0.05  # total pixels enemy moves per frame
     def __init__(self, x, width, height, num_of_sprites, asset_dir, frequency):
         self.set_path(x)
 
@@ -24,7 +25,6 @@ class Enemy:
             self.imgs.append(Utility.get_img("assets/" + asset_dir + str(i) + ".png", self.rect.width, self.rect.height))
 
         self.pix_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
-        self.vel = 0.1  # total pixels enemy moves per frame
         self.dir = pygame.math.Vector2(0, 0)
 
         self.max_health = 100
@@ -35,7 +35,7 @@ class Enemy:
         
         self.ready_to_be_attacked = True
         self.attacked_count = 0
-        self.attack_frequency = frequency
+        self.attack_frequency = frequency  # the greater the attack frequency, the stronger the enemy
         
     def draw(self, surface):
         """

@@ -1,4 +1,5 @@
 import pygame
+
 from background import Background
 
 
@@ -42,7 +43,7 @@ class Game:
                     run = False
                     self.running = False
 
-                background.handle_user_events(event, pos)
+                background.handle_mouse_clicks(event, pos)
 
             if background.get_game_over():
                 run = False

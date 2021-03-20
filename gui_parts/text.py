@@ -2,8 +2,8 @@ import pygame
 
 
 class Text:
-    def __init__(self, font_name="uroob", size=25, text="", color=(255, 255, 255), x=0, y=0):
-        self.font = pygame.font.SysFont(font_name, size)
+    def __init__(self, font_name="uroob", size=25, text="", color=(255, 255, 255), x=0, y=0, bold=False):
+        self.font = pygame.font.SysFont(font_name, size, bold)
         self.color = color
         self.text = self.font.render(text, 1, self.color)
         self.x = x

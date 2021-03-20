@@ -7,6 +7,7 @@ from enemies.crow import Crow
 from enemies.gnu import Gnu
 from enemies.mage import Mage
 from enemies.wizard import Wizard
+from enemies.enemy import Enemy
 from gui_parts.menu import Menu
 from gui_parts.text import Text
 from gui_parts.utility_methods import Utility
@@ -16,7 +17,7 @@ from towers.coiner import Coiner
 
 
 class Background:
-    COSTS = {"bomber": 500, "archer": 250, "coiner": 200}
+    COSTS = {"bomber": 800, "archer": 300, "coiner": 125}
     def __init__(self, screen_w, screen_h):
         self.waves = [
             # crow, mage, wizard, gnu
@@ -52,7 +53,9 @@ class Background:
 
         self.game_over = False
 
-        self.money = 5000
+        self.money = 50000
+
+        self.lives = 10
 
     def draw(self, surface, pos):
         surface.blit(self.imgs[0], (0, 0))
@@ -74,24 +77,37 @@ class Background:
         self.money_text.set_text(str(self.money))
         self.money_text.draw_right(surface, 10, self.menu.rect.right)
 
+        self.lives_text.set_text("LIVES: " + str(self.lives))
+        self.lives_text.draw_centered(surface, 0, self.screen_w)
+
     def update(self):
         self.update_waves()
 
         self.menu.update()
         for tower in self.towers:
+            if isinstance(tower, Coiner):
+                if tower.new_money() and tower.get_placed():
+                    self.money += 50
             tower.update(self.enemies)
+
+        if self.lives <= 0:
+            self.game_over = True
 
     def update_waves(self):
         for enemy in self.enemies:
             enemy.update()
-            if enemy.passed_map(self.screen_w) or enemy.is_dead():
-                if enemy.is_dead():
-                    self.killed += 1
+            if enemy.passed_map(self.screen_w):
+                self.lives -= 1
+                self.enemies.remove(enemy)
+            if enemy.is_dead():
+                self.killed += 1
+                self.money += 25
                 self.enemies.remove(enemy)
                 # print("popped the enemy")
 
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
+                Enemy.vel += 0.05
                 self.current_wave += 1
                 # print(self.current_wave)
                 self.create_enemies()
@@ -117,7 +133,7 @@ class Background:
         self.current_tower = None
         self.towers[-1].set_placed()
 
-    def handle_user_events(self, event, pos):
+    def handle_mouse_clicks(self, event, pos):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.current_tower is None:
 
@@ -139,6 +155,7 @@ class Background:
         self.wave_num_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
         self.killed_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
         self.money_text = Text("uroob", 28, "", (0, 0, 0), 0, self.menu.rect.height // 3)
+        self.lives_text = Text("uroob", 30, "", (0, 0, 0), 0, self.screen_h - 50, True)
 
     def get_game_over(self):
         """
@@ -197,4 +214,4 @@ class Background:
                 gnu_count += 1
                 enemy_x += 35
 
-            count += 1  # moves the next enemy each increment
+            count += 1  # moves the next enemy to add
