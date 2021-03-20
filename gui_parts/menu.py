@@ -8,7 +8,7 @@ from .utility_methods import Utility
 class Menu:
     def __init__(self, s_width, s_height, bomber_cost, archer_cost, coiner_cost):
         self.rect = pygame.Rect(s_width // 2 - 400, 0, 800, 75)
-        self.color = (155, 103, 60)
+        self.color = (155, 103, 60, 228)
 
         self.space_btwn_buttons = 80
         self.start_x = 20
@@ -24,7 +24,9 @@ class Menu:
         self.set_all_texts(bomber_cost, archer_cost, coiner_cost)
 
     def draw(self, surface, pos):
-        pygame.draw.rect(surface, self.color, self.rect)
+        new_surface = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA, 32)
+        pygame.draw.rect(new_surface, self.color, ((0, 0, self.rect.w, self.rect.h)), 0)
+        surface.blit(new_surface, (self.rect.x, self.rect.y))
         for button in self.buttons:
             button.draw_with_image(surface, pos)
 

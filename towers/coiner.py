@@ -8,7 +8,7 @@ from .tower import Tower
 
 class Coiner(Tower):
     def __init__(self, pos, cost):
-        super().__init__(pos=pos, radius=0, cost=cost)
+        super().__init__(pos=pos, radius=0, cost=cost, life=40_000)
         self.coin_img = Utility.get_img("assets/coin.png", self.rect.w - 10, self.rect.w - 10)
         self.coin_count = 1
 
@@ -26,7 +26,7 @@ class Coiner(Tower):
                 self.coin_count = 0
             
     def new_money(self):
-        return self.coin_count % 5000 == 0
+        return self.coin_count % 1200 == 0
 
     def get_placed(self):
         return self.placed

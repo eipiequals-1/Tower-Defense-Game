@@ -10,7 +10,7 @@ class Tower:
     An abstract class that takes care of drawing, moving, collisions, and updating
     It is a superclass of bomber, archer, and coiner
     """
-    def __init__(self, pos, radius, cost):
+    def __init__(self, pos, radius, cost, life):
         self.tower_img = Utility.get_img("assets/towers/tower.png", 40, 110)
         self.man_img = Utility.get_img("assets/towers/man.png", 15, 35)
         self.rect = self.tower_img.get_rect(center=pos)
@@ -23,9 +23,13 @@ class Tower:
 
         self.damage = 0
 
+        self.life = life
+
     def draw(self, surface, pos):
         if self.is_over(pos):
-            pygame.draw.circle(surface, (128, 128, 128, 255), (self.rect.centerx, self.rect.bottom - 20), self.radius)
+            surf = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)
+            pygame.draw.circle(surf, (128, 128, 128, 128), (self.radius, self.radius), self.radius, 0)
+            surface.blit(surf, (self.rect.centerx - self.radius, self.rect.centery - self.radius))
 
         if not self.placed:
             surface.blit(self.tower_img, self.rect)
@@ -57,3 +61,6 @@ class Tower:
         for enemy in enemies:
             if Utility.pyth_dis(self.rect.centerx, self.rect.centery, enemy.rect.centerx, enemy.rect.centery) < self.radius:
                 enemy.handle_attacked(self.damage)
+
+    def is_dead(self):
+        return self.attack_count > self.life

@@ -8,7 +8,7 @@ from .tower import Tower
 
 class Bomber(Tower):
     def __init__(self, pos, cost):
-        super().__init__(pos=pos, radius=130, cost=cost)
+        super().__init__(pos=pos, radius=130, cost=cost, life=50_000)
         self.bomb_img = Utility.get_img("assets/towers/bomb.png", self.rect.w - 10, self.rect.w - 10)
 
     def draw(self, surface, pos):

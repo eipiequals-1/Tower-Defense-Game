@@ -141,7 +141,7 @@ class Enemy:
         return False
 
     def passed_map(self, width):
-        return self.rect.right > width
+        return self.rect.left > width
 
     def set_path(self, start_x):
         """
@@ -149,7 +149,7 @@ class Enemy:
         :param start_x: x coord of enemy when constructed
         """
         self.path = [(-40 - start_x, 419), (13, 419), (70, 418), (125, 427), (149, 469), (157, 699), (234, 703), (317, 700), (367, 651), (367, 585), (353, 506), (375, 454), (425, 416), (488, 412), (545, 421), (660, 422), (721, 461), (775, 490), (836, 490), (885, 453), (911, 421), (981, 425), (1052, 423), (1136, 417), (1201, 420), (1250, 419)]  # hardcoded values for enemy turning and path
-        diff = 10  # random factor
+        diff = 15  # random factor
         r = random.randint
         for i in range(1, len(self.path)):
             self.path[i] = (self.path[i][0], r(self.path[i][1] - diff, self.path[i][1] + diff))  # generates a random y value for each point on the path

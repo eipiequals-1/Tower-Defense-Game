@@ -17,7 +17,7 @@ from towers.coiner import Coiner
 
 
 class Background:
-    COSTS = {"bomber": 800, "archer": 300, "coiner": 125}
+    COSTS = {"bomber": 750, "archer": 250, "coiner": 125}
     def __init__(self, screen_w, screen_h):
         self.waves = [
             # crow, mage, wizard, gnu
@@ -53,7 +53,7 @@ class Background:
 
         self.game_over = False
 
-        self.money = 50000
+        self.money = 500
 
         self.lives = 10
 
@@ -87,7 +87,9 @@ class Background:
         for tower in self.towers:
             if isinstance(tower, Coiner):
                 if tower.new_money() and tower.get_placed():
-                    self.money += 50
+                    self.money += 10
+            if tower.is_dead():
+                self.towers.remove(tower)
             tower.update(self.enemies)
 
         if self.lives <= 0:
@@ -108,6 +110,9 @@ class Background:
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
                 Enemy.vel += 0.05
+                self.COSTS["bomber"] += 25
+                self.COSTS["archer"] += 25
+                self.COSTS["coiner"] += 35
                 self.current_wave += 1
                 # print(self.current_wave)
                 self.create_enemies()
