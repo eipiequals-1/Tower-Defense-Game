@@ -15,8 +15,6 @@ class Game:
         self.running = True
 
     def run(self):
-        #music = pygame.mixer.music.load("assets/music.mp3")
-        #pygame.mixer.music.play(-1)
         while self.running:
             if self.state == "playing":
                 self.playing(self.screen)
@@ -42,6 +40,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
                     self.running = False
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key in [pygame.K_ESCAPE, pygame.K_q]:
+                        run = False
+                        self.running = False
 
                 background.handle_mouse_clicks(event, pos)
 

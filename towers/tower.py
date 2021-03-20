@@ -8,7 +8,7 @@ from gui_parts.utility_methods import Utility
 class Tower:
     """
     An abstract class that takes care of drawing, moving, collisions, and updating
-    It is a superclass of bomber, archer
+    It is a superclass of bomber, archer, and coiner
     """
     def __init__(self, pos, radius, cost):
         self.tower_img = Utility.get_img("assets/towers/tower.png", 40, 110)
@@ -20,6 +20,8 @@ class Tower:
         self.attack_count = 0
 
         self.cost = cost
+
+        self.damage = 0
 
     def draw(self, surface, pos):
         if self.is_over(pos):
@@ -54,4 +56,4 @@ class Tower:
     def attack(self, enemies):
         for enemy in enemies:
             if Utility.pyth_dis(self.rect.centerx, self.rect.centery, enemy.rect.centerx, enemy.rect.centery) < self.radius:
-                enemy.handle_attacked(random.randint(20, 50))
+                enemy.handle_attacked(self.damage)

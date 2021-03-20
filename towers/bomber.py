@@ -17,3 +17,7 @@ class Bomber(Tower):
 
     def draw_bomb(self, surface):
         surface.blit(self.bomb_img, (self.rect.x + 5, self.rect.bottom - 10 - self.bomb_img.get_height()))
+
+    def update(self, enemies):
+        super().update(enemies)
+        self.damage = random.randint(35, 55)

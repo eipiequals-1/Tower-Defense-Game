@@ -17,3 +17,7 @@ class Archer(Tower):
 
     def draw_bow(self, surface):
         surface.blit(self.bow_img, (self.rect.x + 5, self.rect.bottom - 10 - self.bow_img.get_height()))
+
+    def update(self, enemies):
+        super().update(enemies)
+        self.damage = random.randint(25, 40)
