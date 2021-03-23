@@ -12,7 +12,7 @@ class Enemy:
     An abstract class that takes care of drawing, moving, collisions, and updating.
     Is a superclass of wizard, mage, ogre, crow and scorpion
     """
-    vel = 0.05  # total pixels enemy moves per frame
+    vel = 0.25  # total pixels enemy moves per frame
     def __init__(self, x, width, height, num_of_sprites, asset_dir, frequency):
         self.set_path(x)
 
@@ -31,7 +31,7 @@ class Enemy:
         self.health = self.max_health
 
         self.sprite_count = 0
-        self.draws = 35  # number of frames each img is drawn
+        self.draws = 9  # number of frames each img is drawn
         
         self.ready_to_be_attacked = True
         self.attacked_count = 0
@@ -148,7 +148,7 @@ class Enemy:
         Generate a path that deviates slightly from the hardcoded value
         :param start_x: x coord of enemy when constructed
         """
-        self.path = [(-40 - start_x, 419), (13, 419), (70, 418), (125, 427), (149, 469), (157, 699), (234, 703), (317, 700), (367, 651), (367, 585), (353, 506), (375, 454), (425, 416), (488, 412), (545, 421), (660, 422), (721, 461), (775, 490), (836, 490), (885, 453), (911, 421), (981, 425), (1052, 423), (1136, 417), (1201, 420), (1250, 419)]  # hardcoded values for enemy turning and path
+        self.path = [(-40 - start_x, 419), (13, 419), (70, 418), (125, 427), (149, 469), (157, 699), (234, 703), (317, 700), (367, 651), (367, 585), (353, 506), (375, 454), (425, 416), (488, 412), (545, 421), (660, 422), (721, 461), (775, 490), (836, 490), (885, 453), (911, 421), (981, 425), (1052, 423), (1136, 417), (1201, 420), (1350, 419)]  # hardcoded values for enemy turning and path
         diff = 15  # random factor
         r = random.randint
         for i in range(1, len(self.path)):

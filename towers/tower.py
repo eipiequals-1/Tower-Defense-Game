@@ -24,6 +24,8 @@ class Tower:
         self.damage = 0
 
         self.life = life
+        self.animation_radius = 0
+        self.animation_opening = True
 
     def draw(self, surface, pos):
         if self.is_over(pos):
@@ -36,7 +38,9 @@ class Tower:
             self.rect.centerx = pos[0]
             self.rect.centery = pos[1]
         else:
+            self.animation(surface)
             surface.blit(self.tower_img, self.rect)
+        # draw the man on the tower
         surface.blit(self.man_img, (self.rect.centerx - self.man_img.get_width() // 2, self.rect.y - 15))
 
     def update(self, enemies):
@@ -64,3 +68,18 @@ class Tower:
 
     def is_dead(self):
         return self.attack_count > self.life
+
+    def animation(self, surface):
+        new_surface = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)
+        pygame.draw.circle(new_surface, (245, 12, 12, 48), (self.radius, self.radius), self.animation_radius)
+        surface.blit(new_surface, (self.rect.centerx - self.radius, self.rect.centery - self.radius))
+
+        if self.animation_opening:
+            self.animation_radius += 1
+        else:
+            self.animation_radius -= 1
+
+        if self.animation_radius >= self.radius:
+            self.animation_opening = False
+        elif self.animation_radius <= 0:
+            self.animation_opening = True

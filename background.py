@@ -4,10 +4,10 @@ import random
 import pygame
 
 from enemies.crow import Crow
+from enemies.enemy import Enemy
 from enemies.gnu import Gnu
 from enemies.mage import Mage
 from enemies.wizard import Wizard
-from enemies.enemy import Enemy
 from gui_parts.menu import Menu
 from gui_parts.text import Text
 from gui_parts.utility_methods import Utility
@@ -17,7 +17,6 @@ from towers.coiner import Coiner
 
 
 class Background:
-    COSTS = {"bomber": 750, "archer": 250, "coiner": 125}
     def __init__(self, screen_w, screen_h):
         self.waves = [
             # crow, mage, wizard, gnu
@@ -39,7 +38,9 @@ class Background:
         self.imgs = [Utility.get_img("assets/background.jpg", screen_w, screen_h)]
         self.screen_w = screen_w
         self.screen_h = screen_h
-        self.menu = Menu(screen_w, screen_h, self.COSTS["bomber"], self.COSTS["archer"], self.COSTS["coiner"])
+        self.costs = {"bomber": 750, "archer": 250, "coiner": 125}
+
+        self.menu = Menu(screen_w, screen_h, self.costs["bomber"], self.costs["archer"], self.costs["coiner"])
         self.create_text()
 
         self.coin_img = Utility.get_img("assets/coin.png", 45, 45)
@@ -87,7 +88,7 @@ class Background:
         for tower in self.towers:
             if isinstance(tower, Coiner):
                 if tower.new_money() and tower.get_placed():
-                    self.money += 10
+                    self.money += 20
             if tower.is_dead():
                 self.towers.remove(tower)
             tower.update(self.enemies)
@@ -110,9 +111,6 @@ class Background:
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
                 Enemy.vel += 0.05
-                self.COSTS["bomber"] += 25
-                self.COSTS["archer"] += 25
-                self.COSTS["coiner"] += 35
                 self.current_wave += 1
                 # print(self.current_wave)
                 self.create_enemies()
@@ -142,17 +140,17 @@ class Background:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.current_tower is None:
 
-                if self.menu.bomber_tower.is_over(pos) and self.money >= self.COSTS["bomber"]:
-                    self.create_new_tower(pos, "bomber", self.COSTS["bomber"])
-                    self.money -= self.COSTS["bomber"]
+                if self.menu.bomber_tower.is_over(pos) and self.money >= self.costs["bomber"]:
+                    self.create_new_tower(pos, "bomber", self.costs["bomber"])
+                    self.money -= self.costs["bomber"]
 
-                elif self.menu.archer_tower.is_over(pos) and self.money >= self.COSTS["archer"]:
-                    self.create_new_tower(pos, "archer", self.COSTS["archer"])
-                    self.money -= self.COSTS["archer"]
+                elif self.menu.archer_tower.is_over(pos) and self.money >= self.costs["archer"]:
+                    self.create_new_tower(pos, "archer", self.costs["archer"])
+                    self.money -= self.costs["archer"]
 
-                elif self.menu.coiner_tower.is_over(pos) and self.money >= self.COSTS["coiner"]:
-                    self.create_new_tower(pos, "coiner", self.COSTS["coiner"])
-                    self.money -= self.COSTS["coiner"]
+                elif self.menu.coiner_tower.is_over(pos) and self.money >= self.costs["coiner"]:
+                    self.create_new_tower(pos, "coiner", self.costs["coiner"])
+                    self.money -= self.costs["coiner"]
             else:
                 self.set_current_tower_placed()
 
