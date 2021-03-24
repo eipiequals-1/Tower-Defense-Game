@@ -6,7 +6,7 @@ import pygame
 class Utility:
     
     @staticmethod
-    def get_img(img, w, h):
+    def get_img(img, w, h) -> pygame.Surface:
         """
         A reusable method that returns a image scaled to the desired size
 
@@ -18,7 +18,7 @@ class Utility:
         return pygame.transform.scale(pygame.image.load(img).convert_alpha(), (w, h))
 
     @staticmethod
-    def pyth_dis(x1, y1, x2, y2):
+    def pyth_dis(x1, y1, x2, y2) -> float:
         """
         Return pythagorean distance between two objects
 

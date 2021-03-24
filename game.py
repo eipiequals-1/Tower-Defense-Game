@@ -1,6 +1,7 @@
 import pygame
 
 from background import Background
+from game_states import GameStates
 from gui_parts.text import Text
 from gui_parts.utility_methods import Utility
 from gui_parts.word_wrap import WordWrap
@@ -13,18 +14,21 @@ class Game:
         pygame.display.set_caption("Tower Defense")
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.state = "intro"
+        self.state = GameStates.PLAYING
         self.running = True
 
     def run(self):
+        """
+        Handles switching from one game state to another
+        """
         while self.running:
-            if self.state == "playing":
+            if self.state == GameStates.PLAYING:
                 self.playing(self.screen)
-            elif self.state == "intro":
+            elif self.state == GameStates.INTRO:
                 self.intro(self.screen)
-            elif self.state == "win":
+            elif self.state == GameStates.WIN:
                 self.win(self.screen)
-            elif self.state == "rules":
+            elif self.state == GameStates.RULES:
                 self.rules(self.screen)
 
         pygame.quit()
@@ -33,7 +37,7 @@ class Game:
     def playing(self, surface):
         """
         The game loop that controls events, drawing, and updating the game
-        :param surface: surface to draw on
+        :param surface: screen to draw on
         :return: None
         """
         run = True
@@ -49,7 +53,7 @@ class Game:
 
             if background.get_game_over():
                 run = False
-                self.state = "win"
+                self.state = GameStates.WIN
 
             background.draw(surface, pos)  
             background.update()
@@ -76,7 +80,7 @@ class Game:
                 circle_radius -= 1
 
             if circle_radius <= 0:
-                self.state = "rules"
+                self.state = GameStates.RULES
                 run = False
 
             surface.blit(background, (0, 0))
@@ -96,7 +100,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     run = False
-                    self.state = "playing"
+                    self.state = GameStates.PLAYING
 
             surface.fill((0, 0, 0))
             instructions.draw(surface, 100)

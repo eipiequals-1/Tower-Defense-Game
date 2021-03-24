@@ -12,7 +12,7 @@ class Enemy:
     An abstract class that takes care of drawing, moving, collisions, and updating.
     Is a superclass of wizard, mage, ogre, crow and scorpion
     """
-    vel = 0.25  # total pixels enemy moves per frame
+    vel = 0.5  # total pixels enemy moves per frame
     def __init__(self, x, width, height, num_of_sprites, asset_dir, frequency):
         self.set_path(x)
 
@@ -62,6 +62,10 @@ class Enemy:
         except IndexError:
             pass
 
+        self.attacked_count += 1
+        if self.attacked_count >= sys.maxsize:
+            self.attacked_count = 0
+
     def move(self):
         """
         Move enemy throughout the map
@@ -105,26 +109,28 @@ class Enemy:
 
         return (x_change, y_change)
 
-    def draw_health_bar(self, surface):
+    def draw_health_bar(self, surface) -> None:
         """
-        draw a health bar above enemy
-        :param surface: surface
+        Draws a health bar above enemy
+        :param surface: screen to draw on
         :return: None
         """
-        length = 40
-        remain_health = length * self.health / self.max_health
+        length, width = 35, 9  # hardcoded values for health bar size
+        # convert health to the correct size for drawing by using similar rectangles
+        remain_health = length * self.health // self.max_health
+
+        new_surface = pygame.Surface((length, width), pygame.SRCALPHA, 32)  # create a surface for drawing transparent things
         
-        pygame.draw.rect(surface, (255, 0, 0), (self.rect.centerx - length // 2, self.rect.y - 15, length, 10))
-        pygame.draw.rect(surface, (0, 255, 0), (self.rect.centerx - length // 2, self.rect.y - 15, remain_health, 10))
+        # draw onto the new surface
+        pygame.draw.rect(new_surface, (255, 0, 0, 220), (0, 0, length, width))
+        pygame.draw.rect(new_surface, (0, 255, 0, 220), (0, 0, remain_health, width))
+
+        surface.blit(new_surface, (self.rect.centerx - length // 2, self.rect.y - 15))  # draw the new surface onto the screen
 
     def handle_attacked(self, loss):
         if self.ready_to_be_attacked:
             self.health -= loss
             self.ready_to_be_attacked = False
-
-        self.attacked_count += 1
-        if self.attacked_count >= sys.maxsize:
-            self.attacked_count = 0
 
         if self.attacked_count % self.attack_frequency == 0:
             self.ready_to_be_attacked = True

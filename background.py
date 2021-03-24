@@ -14,6 +14,7 @@ from gui_parts.utility_methods import Utility
 from towers.archer import Archer
 from towers.bomber import Bomber
 from towers.coiner import Coiner
+from towers.tower_types import TowerTypes
 
 
 class Background:
@@ -35,12 +36,12 @@ class Background:
             [0, 0, 50, 100],  # 10
         ]
         self.current_wave = 1
-        self.imgs = [Utility.get_img("assets/background.jpg", screen_w, screen_h)]
+        self.imgs = [Utility.get_img("assets/background.jpg", screen_w, screen_h)]  # list of images in case more backgrounds are added
         self.screen_w = screen_w
         self.screen_h = screen_h
-        self.costs = {"bomber": 750, "archer": 250, "coiner": 125}
+        self.costs = {TowerTypes.BOMBER: 750, TowerTypes.ARCHER: 250, TowerTypes.COINER: 125}
 
-        self.menu = Menu(screen_w, screen_h, self.costs["bomber"], self.costs["archer"], self.costs["coiner"])
+        self.menu = Menu(screen_w, screen_h, self.costs[TowerTypes.BOMBER], self.costs[TowerTypes.ARCHER], self.costs[TowerTypes.COINER])
         self.create_text()
 
         self.coin_img = Utility.get_img("assets/coin.png", 45, 45)
@@ -54,12 +55,18 @@ class Background:
 
         self.game_over = False
 
-        self.money = 500
+        self.money = 600
 
         self.lives = 10
 
     def draw(self, surface, pos):
-        surface.blit(self.imgs[0], (0, 0))
+        """
+        Redraws the window each frame
+        :param surface: screen to draw on
+        :param pos: tuple() of x, y coords
+        :return: None
+        """
+        surface.blit(self.imgs[0], (0, 0))  # draws the background
         for enemy in self.enemies:
             enemy.draw(surface)
 
@@ -67,8 +74,9 @@ class Background:
             tower.draw(surface, pos)
         self.menu.draw(surface, pos)
 
-        surface.blit(self.coin_img, (self.money_text.x - 10 - self.coin_img.get_width(), self.menu.rect.centery - self.coin_img.get_height() // 2))
+        surface.blit(self.coin_img, (self.money_text.x - 10 - self.coin_img.get_width(), self.menu.rect.centery - self.coin_img.get_height() // 2))  # draws the coin to represent money to the player
 
+        # draws the text onto the screen
         self.wave_num_text.set_text("WAVE# " + str(self.current_wave))
         self.wave_num_text.draw(surface)
 
@@ -82,7 +90,12 @@ class Background:
         self.lives_text.draw_centered(surface, 0, self.screen_w)
 
     def update(self):
-        self.update_waves()
+        """
+        Main updating method which handles towers and enemy movement, collisions,
+        Money changes, and towers life and death
+        :return: None
+        """
+        self.update_waves()  # updates enemies
 
         self.menu.update()
         for tower in self.towers:
@@ -97,6 +110,10 @@ class Background:
             self.game_over = True
 
     def update_waves(self):
+        """
+        Handles enemy lives and wave changing
+        :return: None
+        """
         for enemy in self.enemies:
             enemy.update()
             if enemy.passed_map(self.screen_w):
@@ -106,30 +123,28 @@ class Background:
                 self.killed += 1
                 self.money += 25
                 self.enemies.remove(enemy)
-                # print("popped the enemy")
 
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
                 Enemy.vel += 0.05
                 self.current_wave += 1
-                # print(self.current_wave)
                 self.create_enemies()
 
             else:
                 self.game_over = True
 
-    def create_new_tower(self, pos, mode, cost):
+    def create_new_tower(self, pos, mode):
         """
         Creates a new tower depending on type
         :param pos: mouse position relative to (0, 0)
         :param mode: type of tower (bomb, archer)
         """
-        if mode == "bomber":
-            self.towers.append(Bomber(pos, cost))
-        elif mode == "archer":
-            self.towers.append(Archer(pos, cost))
-        elif mode == "coiner":
-            self.towers.append(Coiner(pos, cost))
+        if mode == TowerTypes.BOMBER:
+            self.towers.append(Bomber(pos))
+        elif mode == TowerTypes.ARCHER:
+            self.towers.append(Archer(pos))
+        elif mode == TowerTypes.COINER:
+            self.towers.append(Coiner(pos))
         self.current_tower = self.towers[-1]
 
     def set_current_tower_placed(self):
@@ -137,24 +152,36 @@ class Background:
         self.towers[-1].set_placed()
 
     def handle_mouse_clicks(self, event, pos):
+        """
+        Handles selecting towers and placing them
+        :param event: pygame.event
+        :param pos: tuple() of x, y mouse coords
+        :return: None
+        """
         if event.type == pygame.MOUSEBUTTONDOWN:
+            # if the player is not holding a tower
             if self.current_tower is None:
+                # check if there is enough money to buy the tower for each
+                if self.menu.bomber_tower.is_over(pos) and self.money >= self.costs[TowerTypes.BOMBER]:
+                    self.create_new_tower(pos, TowerTypes.BOMBER)
+                    self.money -= self.costs[TowerTypes.BOMBER]
 
-                if self.menu.bomber_tower.is_over(pos) and self.money >= self.costs["bomber"]:
-                    self.create_new_tower(pos, "bomber", self.costs["bomber"])
-                    self.money -= self.costs["bomber"]
+                elif self.menu.archer_tower.is_over(pos) and self.money >= self.costs[TowerTypes.ARCHER]:
+                    self.create_new_tower(pos, TowerTypes.ARCHER)
+                    self.money -= self.costs[TowerTypes.ARCHER]
 
-                elif self.menu.archer_tower.is_over(pos) and self.money >= self.costs["archer"]:
-                    self.create_new_tower(pos, "archer", self.costs["archer"])
-                    self.money -= self.costs["archer"]
-
-                elif self.menu.coiner_tower.is_over(pos) and self.money >= self.costs["coiner"]:
-                    self.create_new_tower(pos, "coiner", self.costs["coiner"])
-                    self.money -= self.costs["coiner"]
+                elif self.menu.coiner_tower.is_over(pos) and self.money >= self.costs[TowerTypes.COINER]:
+                    self.create_new_tower(pos, TowerTypes.COINER)
+                    self.money -= self.costs[TowerTypes.COINER]
             else:
+                # if the player is holding a tower
                 self.set_current_tower_placed()
 
     def create_text(self):
+        """
+        Sets Text() objects that give the user some information regarding game state
+        :return: None
+        """
         self.wave_num_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
         self.killed_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)
         self.money_text = Text("uroob", 28, "", (0, 0, 0), 0, self.menu.rect.height // 3)

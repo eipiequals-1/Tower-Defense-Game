@@ -7,8 +7,8 @@ from .tower import Tower
 
 
 class Coiner(Tower):
-    def __init__(self, pos, cost):
-        super().__init__(pos=pos, radius=0, cost=cost, life=25_000)
+    def __init__(self, pos):
+        super().__init__(pos=pos, radius=0, life=25_000)
         self.coin_img = Utility.get_img("assets/coin.png", self.rect.w - 10, self.rect.w - 10)
         self.coin_count = 1
 
@@ -19,6 +19,7 @@ class Coiner(Tower):
             self.rect.centery = pos[1]
         else:
             surface.blit(self.tower_img, self.rect)
+            self.draw_health_bar(surface)
         # draw the man on the tower
         surface.blit(self.man_img, (self.rect.centerx - self.man_img.get_width() // 2, self.rect.y - 15))        
         self.draw_coin(surface)
@@ -28,7 +29,7 @@ class Coiner(Tower):
 
     def update(self, enemies):
         if self.placed:
-            self.attack_count += 1
+            self.count += 1
             self.coin_count += 1
             if self.coin_count >= sys.maxsize:
                 self.coin_count = 0
