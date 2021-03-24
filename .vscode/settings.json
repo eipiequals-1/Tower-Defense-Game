@@ -1,9 +1,2 @@
 {
-    "workbench.colorTheme": "Monokai",
-    "workbench.colorCustomizations": {
-        "activityBar.background":"#252627",
-        "activityBar.foreground": "#E1E0E6",
-        "sideBar.background": "#2f2f33",
-        "editor.background": "#202324",
-    },
 }

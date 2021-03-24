@@ -18,7 +18,15 @@ from towers.tower_types import TowerTypes
 
 
 class Background:
+    """
+    Handles updating, drawing, and playing the game state
+    """
     def __init__(self, screen_w, screen_h):
+        """
+        Initializes the enemies, waves, towers, text, and menu bar
+        :param screen_w: int - width of the pygame screen
+        :param screen_h: int - height of the pygame screen
+        """
         self.waves = [
             # crow, mage, wizard, gnu
             # corresponds to the frequency
@@ -48,7 +56,7 @@ class Background:
 
         self.towers = []
         self.enemies = []
-        self.current_tower = None
+        self.current_tower = None  # indicates if the player is placing a tower
         self.create_enemies()
 
         self.killed = 0
@@ -179,7 +187,8 @@ class Background:
 
     def create_text(self):
         """
-        Sets Text() objects that give the user some information regarding game state
+        Sets Text() objects that give the user some information regarding
+        Game state and points
         :return: None
         """
         self.wave_num_text = Text("uroob", 28, "", (255, 255, 255), 10, 10)

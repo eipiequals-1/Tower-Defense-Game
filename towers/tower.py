@@ -9,12 +9,15 @@ class Tower:
     """
     An abstract class that takes care of drawing, moving, collisions, and updating
     It is a superclass of bomber, archer, and coiner.
-
-    :param pos: tuple() starting x, y coords of the tower
-    :param radius: int() how far the tower can attack enemies
-    :param life: int() number of frames to be alive
     """
     def __init__(self, pos, radius, life):
+        """
+        Initializes important tower attributes
+        
+        :param pos: tuple() starting x, y coords of the tower
+        :param radius: int() how far the tower can attack enemies
+        :param life: int() number of frames to be alive
+        """
         self.tower_img = Utility.get_img("assets/towers/tower.png", 40, 110)
         self.man_img = Utility.get_img("assets/towers/man.png", 15, 35)
         self.rect = self.tower_img.get_rect(center=pos)
