@@ -4,16 +4,19 @@ class WordWrap:
     """
     Creates a list of surfaces with strings
     That are word wrapped from left to right
-
-    :param sentence: string - sentence that will be wrapped
-    :param left: int - left margin
-    :param right: int - right margin
-    :param spacing: int - line spacing
-    :param font_name: pygame.font.SysFont() - sys font name
-    :param font_size: int - font size
-    :param color: tuple() RGB color
     """
     def __init__(self, sentence, left, right, spacing, font_name, font_size, color=(255, 255, 255)):
+        """
+        Creates the necessary attributes for the text to draw
+
+        :param sentence: string - sentence that will be wrapped
+        :param left: int - left margin
+        :param right: int - right margin
+        :param spacing: int - line spacing
+        :param font_name: pygame.font.SysFont() - sys font name
+        :param font_size: int - font size
+        :param color: tuple - RGB color
+        """
         self.left = left
         self.spacing = spacing
         self.surfaces = []
@@ -57,8 +60,9 @@ class WordWrap:
     def draw(self, surface, start_y):
         """
         Draws the list of surfaces onto the pygame main surface
-        :param surface: pygame screen
+        :param surface: pygame.Surface - screen to draw on
         :param start_y: int - start y coordinate for text
+        :return: None
         """
         for idx, text_surface in enumerate(self.surfaces):
             surface.blit(text_surface, (self.left, start_y + idx * self.spacing))

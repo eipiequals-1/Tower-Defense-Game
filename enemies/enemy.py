@@ -14,6 +14,16 @@ class Enemy:
     """
     vel = 0.5  # total pixels enemy moves per frame
     def __init__(self, x, width, height, num_of_sprites, asset_dir, frequency):
+        """
+        Initializes velocities, rectangles, vectors, and images necessary to move and
+        Interact with the towers
+        :param x: int - the starting x value
+        :param width: int - desired width of enemy in pixels
+        :param height: int - desired height of enemy in pixels
+        :param num_of_sprites: int - length of files(.png) in the directory
+        :param asset_dir: str - relative path to the assets
+        :param frequency: int - the frequency at which the enemy is dealt damage
+        """
         self.set_path(x)
 
         self.path_pos = 1  # where the enemy is going
@@ -56,7 +66,7 @@ class Enemy:
         Handles updating every frame. Updates drawing, moving, and collisions
         :return: None
         """
-        # moves while making sure that there are no path errors by a frame
+        # moves while making sure that there are no path errors by a frame off
         try:
             self.move()
         except IndexError:

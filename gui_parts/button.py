@@ -24,9 +24,16 @@ class Button:
         else:
             pygame.draw.rect(surface, self.over_color, self.rect)
 
-        if self.img != "":
-            surface.blit(self.img, self.rect)
-            self.text.draw_centered(surface, self.rect.left, self.rect.right)
+        surface.blit(self.img, self.rect)
+        self.text.draw_centered(surface, self.rect.left, self.rect.right)
+
+    def draw_without_image(self, surface, pos):
+        if not self.is_over(pos):
+            pygame.draw.rect(surface, self.color, self.rect)
+        else:
+            pygame.draw.rect(surface, self.over_color, self.rect)
+
+        self.text.draw_centered(surface, self.rect.left, self.rect.right)
             
     def is_over(self, pos):
         return self.rect.collidepoint(pos)

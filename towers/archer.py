@@ -10,17 +10,21 @@ class Archer(Tower):
     """
     Subtype of Tower()
     Changes include: radius, life, image
-    :param pos: tuple() of x, y coords of the mouse
     """
     def __init__(self, pos):
-        super().__init__(pos=pos, radius=90, life=4_000)
+        """
+        Initializes most of the same things as the superclass
+        Creates its own tower img
+        :param pos: tuple - of x, y coords of the mouse
+        """
+        super().__init__(pos=pos, radius=90, life=5_000)
         self.bow_img = Utility.get_img("assets/towers/bow.png", self.rect.w - 10, self.rect.w - 5)
 
     def draw(self, surface, pos):
         """
         Overrides the original method by drawing a bow on the tower
-        :param surface: screen to draw on
-        :param pos: tuple() of x, y coords of the mouse
+        :param surface: pygame.Surface - screen to draw on
+        :param pos: tuple - of x, y coords of the mouse
         :return: None
         """
         super().draw(surface, pos)
@@ -29,7 +33,7 @@ class Archer(Tower):
     def draw_bow(self, surface):
         """
         Simply draws the bow onto the screen
-        :param surface: screen to draw on
+        :param surface: pygame.Surface - screen to draw on
         :return: None
         """
         surface.blit(self.bow_img, (self.rect.x + 5, self.rect.bottom - 10 - self.bow_img.get_height()))
@@ -38,7 +42,7 @@ class Archer(Tower):
         """
         Overrides the orginal method by changing the amount
         Of damage to deal to the enemy
-        :param enemies: List[] of enemies
+        :param enemies: List[] - of enemies
         :return: None
         """
         super().update(enemies)

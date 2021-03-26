@@ -31,9 +31,6 @@ class Menu:
             button.draw_with_image(surface, pos)
 
         self.draw_costs(surface)
-        
-    def update(self):
-        pass
 
     def draw_costs(self, surface):
         """

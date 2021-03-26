@@ -61,17 +61,18 @@ class Background:
 
         self.killed = 0
 
-        self.game_over = False
+        self.win = False
+        self.lose = False
 
         self.money = 600
 
-        self.lives = 10
+        self.lives = 15
 
     def draw(self, surface, pos):
         """
         Redraws the window each frame
-        :param surface: screen to draw on
-        :param pos: tuple() of x, y coords
+        :param surface: pygame.Surface - screen to draw on
+        :param pos: tuple - of x, y coords
         :return: None
         """
         surface.blit(self.imgs[0], (0, 0))  # draws the background
@@ -105,7 +106,6 @@ class Background:
         """
         self.update_waves()  # updates enemies
 
-        self.menu.update()
         for tower in self.towers:
             if isinstance(tower, Coiner):
                 if tower.new_money() and tower.get_placed():
@@ -115,7 +115,7 @@ class Background:
             tower.update(self.enemies)
 
         if self.lives <= 0:
-            self.game_over = True
+            self.lose = True
 
     def update_waves(self):
         """
@@ -134,18 +134,21 @@ class Background:
 
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
+                self.costs[TowerTypes.BOMBER] = self.costs[TowerTypes.BOMBER] + 25
+                self.costs[TowerTypes.ARCHER] += 25
+                self.costs[TowerTypes.COINER] += 25
                 Enemy.vel += 0.05
                 self.current_wave += 1
                 self.create_enemies()
 
             else:
-                self.game_over = True
+                self.win = True
 
     def create_new_tower(self, pos, mode):
         """
         Creates a new tower depending on type
-        :param pos: mouse position relative to (0, 0)
-        :param mode: type of tower (bomb, archer)
+        :param pos: tuple - x, y coords of the mouse pos
+        :param mode: TowerTypes(Enum) - type of tower (bomber, archer, coiner)
         """
         if mode == TowerTypes.BOMBER:
             self.towers.append(Bomber(pos))
@@ -156,6 +159,10 @@ class Background:
         self.current_tower = self.towers[-1]
 
     def set_current_tower_placed(self):
+        """
+        Places a new tower
+        :return: None
+        """
         self.current_tower = None
         self.towers[-1].set_placed()
 
@@ -163,7 +170,7 @@ class Background:
         """
         Handles selecting towers and placing them
         :param event: pygame.event
-        :param pos: tuple() of x, y mouse coords
+        :param pos: tuple - of x, y mouse coords
         :return: None
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -196,18 +203,22 @@ class Background:
         self.money_text = Text("uroob", 28, "", (0, 0, 0), 0, self.menu.rect.height // 3)
         self.lives_text = Text("uroob", 30, "", (0, 0, 0), 0, self.screen_h - 50, True)
 
-    def get_game_over(self):
+    def get_win(self):
         """
         Simple getter method
         :return: bool
         """
-        return self.game_over
+        return self.win
+
+    def get_lose(self):
+        return self.lose
 
     def create_enemies(self):
         """
         Makes new enemies based off of the waves made previously
         :return: None
         """
+        self.enemies.clear()
         # total number of each enemy
         crows = self.waves[self.current_wave][0]
         mages = self.waves[self.current_wave][1]
@@ -225,7 +236,7 @@ class Background:
 
         count = 0  # keeps track of the next enemy to add
 
-        enemy_x = 0  # append an enemy at a new x coord
+        enemy_x = 40  # append an enemy at a new x coord
 
         i = 0  # number of enemies added
         while i < total:

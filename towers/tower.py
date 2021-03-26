@@ -12,11 +12,11 @@ class Tower:
     """
     def __init__(self, pos, radius, life):
         """
-        Initializes important tower attributes
+        Initializes images, velocities, and positions
         
-        :param pos: tuple() starting x, y coords of the tower
-        :param radius: int() how far the tower can attack enemies
-        :param life: int() number of frames to be alive
+        :param pos: tuple - starting x, y coords of the tower
+        :param radius: int - how far the tower can attack enemies
+        :param life: int - number of frames to be alive
         """
         self.tower_img = Utility.get_img("assets/towers/tower.png", 40, 110)
         self.man_img = Utility.get_img("assets/towers/man.png", 15, 35)
@@ -35,8 +35,8 @@ class Tower:
     def draw(self, surface, pos):
         """
         Redraws the tower each frame
-        :param surface: screen to draw on
-        :param pos: tuple() of x, y coords of the mouse
+        :param surface: pygame.Surface - screen to draw on
+        :param pos: tuple - of x, y coords of the mouse
         :return: None
         """
         if self.is_over(pos):
@@ -58,7 +58,7 @@ class Tower:
     def update(self, enemies):
         """
         Updates the enemy every frame
-        :param enemies: list of enemies
+        :param enemies: List[] - of enemies
         :return: None
         """
         if self.placed:
@@ -77,7 +77,7 @@ class Tower:
     def is_over(self, pos):
         """
         Checks if the tower collides with the mouse pointer
-        :param pos: tuple() of x, y coords
+        :param pos: tuple - x, y coords that are the mouse position
         :return: bool
         """
         return self.rect.collidepoint(pos)
@@ -85,7 +85,7 @@ class Tower:
     def attack(self, enemies):
         """
         Checks for each enemy in range
-        :param enemies: List[] of enemies
+        :param enemies: List[] - of enemies
         :return: None
         """
         for enemy in enemies:
@@ -95,7 +95,7 @@ class Tower:
     def draw_health_bar(self, surface):
         """
         Draws a health bar above enemy
-        :param surface: screen to draw on
+        :param surface: pygame.Surface - screen to draw on
         :return: None
         """
         length, width = self.rect.w, 10  # hardcoded values for health bar size
@@ -120,7 +120,7 @@ class Tower:
         """
         Draws an animation of opening and closing circles
         To look like a bomb detonating
-        :param surface: screen to draw on
+        :param surface: pygame.Surface - screen to draw on
         :return: None
         """
         new_surface = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)  # transparent surface
