@@ -18,7 +18,7 @@ class Game:
         pygame.display.set_caption("Tower Defense")
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.state = GameStates.LOSE
+        self.state = GameStates.INTRO
         self.running = True
 
     def run(self):
