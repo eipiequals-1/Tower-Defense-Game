@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 from background import Background
@@ -12,11 +14,11 @@ class Game:
         """
         Initializes the pygame screen and game states
         """
+        pygame.init()
         self.width = 1250
         self.height = 750
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Tower Defense")
-        pygame.init()
         self.clock = pygame.time.Clock()
         self.state = GameStates.INTRO
         self.running = True
@@ -26,10 +28,17 @@ class Game:
         Handles switching from one game state to another
         :return: None
         """
+        pygame.mixer.music.load(os.path.join("music", "dark_music.ogg"))
+        pygame.mixer.music.set_volume(0.5)
         while self.running:
+            pygame.mixer.music.stop()
             if self.state == GameStates.PLAYING:
+                pygame.mixer.music.load(os.path.join("music", "music.ogg"))
+                pygame.mixer.music.play(loops=-1)
                 self.playing(self.screen)
             elif self.state == GameStates.INTRO:
+                pygame.mixer.music.load(os.path.join("music", "dark_music.ogg"))
+                pygame.mixer.music.play(loops=-1)
                 self.intro(self.screen)
             elif self.state == GameStates.WIN:
                 self.win(self.screen)
@@ -37,7 +46,6 @@ class Game:
                 self.rules(self.screen)
             elif self.state == GameStates.LOSE:
                 self.lose(self.screen)
-
         pygame.quit()
         quit()
 
