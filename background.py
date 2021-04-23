@@ -68,6 +68,8 @@ class Background:
 
         self.lives = 15
 
+        self.night_surf = pygame.Surface((self.screen_w, screen_h), pygame.SRCALPHA)
+
     def draw(self, surface, pos):
         """
         Redraws the window each frame
@@ -97,6 +99,10 @@ class Background:
 
         self.lives_text.set_text("LIVES: " + str(self.lives))
         self.lives_text.draw_centered(surface, 0, self.screen_w)
+
+        # add the purple hue
+        self.night_surf.fill((255, 0, 255, 30))
+        surface.blit(self.night_surf, (0, 0))
 
     def update(self):
         """
