@@ -128,15 +128,15 @@ class Background:
         Handles enemy lives and wave changing
         :return: None
         """
-        for enemy in self.enemies:
+        for i, enemy in enumerate(self.enemies):
             enemy.update()
             if enemy.passed_map(self.screen_w):
                 self.lives -= 1
-                self.enemies.remove(enemy)
+                self.enemies.pop(i)
             if enemy.is_dead():
                 self.killed += 1
                 self.money += 25
-                self.enemies.remove(enemy)
+                self.enemies.pop(i)
 
         if len(self.enemies) == 0:
             if self.current_wave < len(self.waves) - 1:
